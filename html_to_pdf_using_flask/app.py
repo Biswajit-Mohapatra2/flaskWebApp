@@ -1,31 +1,35 @@
 from flask import Flask, render_template, request, send_file
-import pdfkit
+from weasyprint import HTML
+import tempfile
+import logging
+import os
 
 app = Flask(__name__)
 
-
-@app.route("/")
+@app.route('/') 
 def index():
-    return render_template("index.html")
+    return render_template('index.html')
 
+@app.route('/convert', methods=['POST'])
+def convert():
+    html_file = request.files['html_file']
+    
+    if not html_file:
+        return 'No file', 400
 
-@app.route("/convert_html_to_pdf", methods=["POST"])
-def convert_html_to_pdf():
-    html_file = request.files["0"]
-    pdf_file = html_file.filename + ".pdf"
+    filename = html_file.filename
+    html_path = os.path.join('uploads', filename)
+    html_file.save(html_path)
 
-    config = pdfkit.configuration(
-        wkhtmltopdf=r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe")
-    # pdfkit.from_file(html_file.decode('utf-8'), pdf_file, configuration=config)
-    # pdfkit.from_file(html_file.read().decode('utf-8'), pdf_file, configuration=config)
-    pdfkit.from_file(r"C:\Users\RUDRAPRASADMOHAPATRA\Desktop\htmlToPdfFlask\templates\app2.html", pdf_file, configuration=config)
+    try:
+        pdf_path = os.path.join('downloads', filename.replace('.html', '.pdf'))
+        HTML(html_path).write_pdf(pdf_path)
 
+    except Exception as e:
+        print(e)
+        return 'Error converting to PDF', 500
 
+    return send_file(pdf_path)
 
-    # pdfkit.from_file(html_file, pdf_file, configuration=config)
-
-    return send_file(pdf_file, as_attachment=True)
-
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run(debug=True)
