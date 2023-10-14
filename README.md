@@ -1,16 +1,16 @@
 # flaskWebApp
 
-## To update all your exiting packages:
+## To update all your existing packages:
 ```shell
 sudo apt update -y
 ```
 
-## To Download all required dependancies run this cmd:
+## To download all required dependancies for your python app, run this cmd:
 
 ```shell
 pip install -r requirements.txt
 ```
-## To run the flask server:
+## To run your python application server:
 
 ```shell
 python app.py
