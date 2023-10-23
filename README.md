@@ -4,11 +4,7 @@
 ```shell
 sudo apt update -y
 ```
-## Switch to Working Directory
 
-```shell
-cd html_to_pdf_using_flask
-```
 ## Download all required dependancies for your python app:
 
 ```shell
